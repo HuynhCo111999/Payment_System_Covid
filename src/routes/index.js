@@ -25,6 +25,8 @@ router.get('/register', async(req, res) => {
 
 router.get('/logout', async(req, res) => {
     res.clearCookie("access_token");
+    res.clearCookie("userId");
+    res.clearCookie("userType");
     return res.redirect('/');
 })
 

@@ -117,7 +117,7 @@ exports.signin = (req, res) => {
 };
 
 exports.createAcc = (req, res) => {
-  res.body.roles = ['user'];
+  // req.body.roles = ['user'];
   User.create({
     username: req.body.username,
     email: req.body.email,

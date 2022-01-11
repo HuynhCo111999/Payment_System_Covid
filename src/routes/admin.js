@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const locationManagement = require('../controllers/product.controller');
 const { verifySignUp, authJwt } = require("../middleware");
 const authController = require("../controllers/auth.controller");
 const UserController = require("../controllers/user.controller")
@@ -19,6 +18,7 @@ router.post('/createUser',
 router.post('/createAccount', [
     verifySignUp.checkDuplicateUsernameOrEmail,
     verifySignUp.checkRolesExisted,
+    authJwt.verifyToken,
     authJwt.isAdmin
   ], 
   authController.createAcc
