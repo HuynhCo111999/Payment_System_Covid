@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
+const https = require('https');
+const fs = require('fs');
 
 require('dotenv').config()
 //set port local
@@ -68,8 +70,14 @@ app.use('/admin', require('./routes/admin'));
 app.use(express.static(__dirname + '/public'));
 require('./routes/auth.routes')(app);
 
+const sslServer = https.createServer({
+  key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
+  }, 
+  app
+)
 
-app.listen(port, () => {
+sslServer.listen(port, () => {
     console.log(`Server started on port: ${port}`);
 })
 
