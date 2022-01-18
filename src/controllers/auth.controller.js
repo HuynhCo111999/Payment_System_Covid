@@ -26,15 +26,17 @@ exports.signup = (req, res) => {
           }
         }).then(roles => {
           user.setRoles(roles).then(() => {
-            req.flash("success_msg", "Register success!")
-            res.redirect('/register');
+            return res.render('login',{
+              layout: 'main'
+            });
           });
         });
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          req.flash("success_msg", "Register success!")
-          res.redirect('/register');
+          return res.render('login',{
+            layout: 'main'
+          });
         });
       }
     })
@@ -117,7 +119,6 @@ exports.signin = (req, res) => {
 };
 
 exports.createAcc = (req, res) => {
-  // req.body.roles = ['user'];
   User.create({
     username: req.body.username,
     email: req.body.email,
@@ -155,4 +156,11 @@ exports.createAcc = (req, res) => {
         error: err
       })
     });
+}
+
+exports.checkfirst = async() => {
+  let users = await User.findAll();
+  console.log("users: ", users);
+  if(!users || users.length === 0) return false;
+  return true;
 }

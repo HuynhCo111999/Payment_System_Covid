@@ -10,7 +10,6 @@ router.post('/createUser',
   [
     verifySignUp.checkDuplicateUsernameOrEmail,
     verifySignUp.checkRolesExisted,
-    // authJwt.isAdmin
   ], 
   authController.signup
 );
@@ -18,10 +17,9 @@ router.post('/createUser',
 router.post('/createAccount', [
     verifySignUp.checkDuplicateUsernameOrEmail,
     verifySignUp.checkRolesExisted,
-    authJwt.verifyToken,
-    authJwt.isAdmin
   ], 
   authController.createAcc
 );
+
 
 module.exports = router;
