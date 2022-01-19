@@ -70,3 +70,62 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="ModalMoreInforUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: red">
+                <h6 class="modal-title font-weight-normal" id="exampleModalLabel" style="color: white;">Chi tiết Account: </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3" style="text-align: center; color: black">
+                     <div class="row">
+                         <div class="col-12">
+                            Tên tài khoản: 
+                            <span id="nameAcc"></span>
+                         </div>
+                         <div class="col-12">
+                            Email: 
+                            <span id="email"></span>
+                         </div>
+                         <div class="col-12">
+                            Số dư: 
+                            <span id="positive"></span>
+                         </div>
+                         <div class="col-12">
+                            Khoản nợ: 
+                            <span id="negative"></span>
+                         </div>
+                     </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+
+<script>
+    const handleClickInfo = (id) => {
+        fetch(`https://localhost:3001/admin/getDetailAccount?id=${id}`, {
+            method: 'GET'
+        }).then(response => 
+            response.json())
+          .then(data => {
+            console.log("data: ", data);
+            if(data.success) {
+                $('#nameAcc').text(data.data.username);
+                $('#email').text(data.data.email);
+                $('#positive').text(data.data.positive);
+                $('#negative').text(data.data.negative)
+            } else {
+                console.log('error')
+            }
+          });
+    }
+</script>

@@ -26,5 +26,7 @@ router.get('/getAllAccount', authController.testGetAllAccounts);
 
 router.get('/accounts', authController.getAllAccounts);
 
+router.get('/getDetailAccount', authController.getDetailAccount)
+
 
 module.exports = router;

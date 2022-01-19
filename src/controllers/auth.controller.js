@@ -233,11 +233,37 @@ exports.testGetAllAccounts = (req, res) => {
   })
 }
 
-
-
 exports.checkfirst = async() => {
   let users = await User.findAll();
   console.log("users: ", users);
   if(!users || users.length === 0) return false;
   return true;
 }
+
+exports.getDetailAccount = async(req, res) => {
+  const id = req.query.id;
+  const user = await User.findOne({
+    raw: true,
+    where: {
+      id: id
+    }
+  })
+  const wallet = await Wallet.findOne({
+    raw: true,
+    where: {
+      userId: id
+    }
+  })
+  if(user && wallet) {
+    return res.json({
+      success: true,
+      data: {...user,...wallet}
+    })
+  }
+  return res.json({
+    success: false,
+    error: 'Not know.'
+  })
+}
+
+
