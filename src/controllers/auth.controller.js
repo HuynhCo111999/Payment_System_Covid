@@ -2,6 +2,7 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
+const Wallet = db.wallet;
 
 const Op = db.Sequelize.Op;
 
@@ -17,6 +18,15 @@ exports.signup = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
+      Wallet.create({
+        positive: 0,
+        negative: 0,
+        userId: user.id
+      }).then(() => {
+        console.log("create wallet success")
+      }).catch((e) => {
+        console.log("create wallet error: ", e)
+      })
       if (req.body.roles) {
         Role.findAll({
           where: {
@@ -108,7 +118,7 @@ exports.signin = (req, res) => {
             res.cookie("access_token", token);
             res.cookie("userId", user.id);
             res.cookie("userType", 'user');
-            return res.redirect('/user');
+            return res.redirect('/user/infoAccount');
           }
         }
       });
@@ -125,6 +135,15 @@ exports.createAcc = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
+      Wallet.create({
+        positive: 0,
+        negative: 0,
+        userId: user.id
+      }).then(() => {
+        console.log("create wallet success")
+      }).catch((e) => {
+        console.log("create wallet error: ", e)
+      })
       if (req.body.roles) {
         Role.findAll({
           where: {
@@ -170,12 +189,18 @@ exports.getAllAccounts = async(req, res) => {
       ]
     }, 
   );
-  
+  let dataWallet = await Wallet.findOne({
+    raw: true,
+    where: {
+      userId: req.cookies['userId']
+    }
+  })
   let filterAccounts = await listAccounts.filter(item => item["roles.name"] === 'user');
-  console.log("filterAccounts: ", filterAccounts);
+  console.log("filterAccounts: ", filterAccounts, dataWallet);
   return res.render('admin/listAccounts', {
     layout: 'admin/main',
     listAccounts: filterAccounts,
+    dataWallet: dataWallet
   });
 }
 

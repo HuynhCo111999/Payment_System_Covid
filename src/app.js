@@ -67,6 +67,7 @@ app.use(function(req, res, next) {
 //As Routes are defined in pages.js
 app.use('/', require('./routes/index'));
 app.use('/admin', require('./routes/admin'));
+app.use('/user', require('./routes/user'));
 app.use(express.static(__dirname + '/public'));
 require('./routes/auth.routes')(app);
 

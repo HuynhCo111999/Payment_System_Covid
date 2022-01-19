@@ -6,6 +6,7 @@ const UserController = require("../controllers/user.controller")
 
 
 router.get('/users', UserController.getAllUsers);
+
 router.post('/createUser', 
   [
     verifySignUp.checkDuplicateUsernameOrEmail,

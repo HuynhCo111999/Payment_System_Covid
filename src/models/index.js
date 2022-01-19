@@ -25,7 +25,12 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.wallet = require("../models/wallet.model")(sequelize, Sequelize);
 
+db.wallet.belongsTo(db.user, {
+  through: "wallet_user",
+  foreignKey: "userId",
+});
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
