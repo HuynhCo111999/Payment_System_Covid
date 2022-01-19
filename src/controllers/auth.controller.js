@@ -102,7 +102,7 @@ exports.signin = (req, res) => {
             res.cookie("access_token", token);
             res.cookie("userId", user.id);
             res.cookie("userType", 'admin');
-            return res.redirect('/');
+            return res.redirect('/admin/accounts');
           }
           else {
             res.cookie("access_token", token);
@@ -157,6 +157,55 @@ exports.createAcc = (req, res) => {
       })
     });
 }
+
+exports.getAllAccounts = async(req, res) => {
+  let listAccounts = await User.findAll(
+    { 
+      raw: true,
+      include: [
+        {
+          model: Role,
+          attributes: ['name']
+        }
+      ]
+    }, 
+  );
+  console.log("filterAccounts: ",listAccounts)
+  
+  // let filterAccounts = await listAccounts.map(item => item.roles.name === 'user');
+  
+  return res.render('admin/listAccounts', {
+    layout: 'admin/main',
+    listAccounts: listAccounts,
+  });
+}
+
+exports.testGetAllAccounts = (req, res) => {
+  User.findAll(
+    {
+      raw: true,
+      include: [
+        {
+          model: Role,
+          attributes: ['name'],
+          required: true
+        }
+      ]
+    }
+  ).then(user => {
+    res.json({
+      success: true,
+      data: user
+    })
+  }).catch((error) => {
+    res.json({
+      success: false,
+      error: error
+    })
+  })
+}
+
+
 
 exports.checkfirst = async() => {
   let users = await User.findAll();

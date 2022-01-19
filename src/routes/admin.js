@@ -21,5 +21,9 @@ router.post('/createAccount', [
   authController.createAcc
 );
 
+router.get('/getAllAccount', authController.testGetAllAccounts);
+
+router.get('/accounts', authController.getAllAccounts);
+
 
 module.exports = router;
