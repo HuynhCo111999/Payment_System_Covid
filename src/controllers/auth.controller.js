@@ -170,13 +170,12 @@ exports.getAllAccounts = async(req, res) => {
       ]
     }, 
   );
-  console.log("filterAccounts: ",listAccounts)
   
-  // let filterAccounts = await listAccounts.map(item => item.roles.name === 'user');
-  
+  let filterAccounts = await listAccounts.filter(item => item["roles.name"] === 'user');
+  console.log("filterAccounts: ", filterAccounts);
   return res.render('admin/listAccounts', {
     layout: 'admin/main',
-    listAccounts: listAccounts,
+    listAccounts: filterAccounts,
   });
 }
 
@@ -192,10 +191,14 @@ exports.testGetAllAccounts = (req, res) => {
         }
       ]
     }
-  ).then(user => {
+  ).then(users => {
+    const resultUser = users.map(u=>({
+      ...u,
+      role: u["roles.name"]
+    }))
     res.json({
       success: true,
-      data: user
+      data: resultUser
     })
   }).catch((error) => {
     res.json({

@@ -77,7 +77,7 @@ const sslServer = https.createServer({
   app
 )
 
-app.listen(port, () => {
+sslServer.listen(port, () => {
     console.log(`Server started on port: ${port}`);
 })
 
