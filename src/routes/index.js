@@ -24,8 +24,6 @@ router.get('/', async(req, res) => {
                     res.render('admin/main', {
                         layout: 'admin/main'
                     }) 
-                } else if (role === "moderator") {
-                    return res.redirect('/moderator')
                 } else {
                     return res.redirect('/user')
                 }
