@@ -149,3 +149,22 @@ exports.getChangePassword = async (req, res) => {
     someData: 'Thay đổi thông tin cá nhân',
   });
 }
+
+exports.getUserByUserName = async (req, res) => {
+  const user = await User.findOne({
+    raw: true,
+    where: {
+      username: req.body.username
+    }
+  })
+  if(user) {
+    return res.json({
+      success: true,
+      data: user
+    })
+  }
+  return res.json({
+    success: false,
+    error: "error"
+  })
+}

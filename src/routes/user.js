@@ -11,4 +11,7 @@ router.get('/getRessetPassword', userControlller.getChangePassword);
 
 router.post('/getInfoAccount', userControlller.getInfoAccount);
 
+
+router.post('/getUserByName', userControlller.getUserByUserName);
+
 module.exports = router;

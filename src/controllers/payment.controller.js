@@ -32,13 +32,20 @@ exports.rechargeAndDebit = async(req, res) => {
 
 exports.payment = async(req, res) => {
     const body = req.body;  
-    console.log("body:", body);
+    const setting = await Setting.findOne({raw: true});
+    console.log("setting: ", setting);
+
     const dataWallet = await Wallet.findOne({
         raw: true,
         userId: body.userId
     })
     if(dataWallet) {
-        if(dataWallet.positive < body.money) {
+        if(limitcredit > body.money) {
+            return res.json({
+                success: false,
+                error: "Không đủ hạn mức thanh toán."
+            })  
+        } else if(dataWallet.positive < body.money) {
             return res.json({
                 success: false,
                 error: "Tài khản không đủ tiền để thanh toán."
