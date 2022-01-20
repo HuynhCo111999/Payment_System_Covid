@@ -3,7 +3,7 @@ const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
 const Wallet = db.wallet;
-
+const Setting = db.setting;
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -22,6 +22,13 @@ exports.signup = (req, res) => {
         positive: 0,
         negative: 0,
         userId: user.id
+      }).then(() => {
+        console.log("create wallet success")
+      }).catch((e) => {
+        console.log("create wallet error: ", e)
+      })
+      Setting.create({
+        limitcredit: 0
       }).then(() => {
         console.log("create wallet success")
       }).catch((e) => {
@@ -135,6 +142,13 @@ exports.createAcc = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
+      Setting.create({
+        limitcredit: 0
+      }).then(() => {
+        console.log("create wallet success")
+      }).catch((e) => {
+        console.log("create wallet error: ", e)
+      })
       Wallet.create({
         positive: 0,
         negative: 0,
@@ -311,3 +325,45 @@ exports.connectPayment = async(req, res) => {
   });
 }
 
+exports.getSetting = async(req, res) => {
+  const setting = await Setting.findOne({raw: true});
+  if(setting) {
+    return res.json({
+      success: true,
+      data: setting
+    })
+  }
+  return res.json({
+    success: false,
+    error: "erorr"
+  })
+}
+
+exports.updateSetting = async(req, res) => {
+  console.log("update setting: ", req.body);
+  if(req.body.limitcredit < 0) {
+    return res.json({
+      success: false,
+      error: "Limit credit > 0, please check!"
+    })
+  }
+  const update = await Setting.update({
+    limitcredit: req.body.limitcredit},{
+    where: {
+      id: 1
+    }
+  })
+  if(update) {
+    const setting = await Setting.findOne({raw: true});
+    if(setting) {
+      return res.json({
+        success: true,
+        data: setting
+      })
+    }
+  }
+  return res.json({
+    success: false,
+    error: "erorr"
+  })
+}

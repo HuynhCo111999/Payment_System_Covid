@@ -9,7 +9,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const https = require('https');
 const fs = require('fs');
-
+var cors = require('cors');
 require('dotenv').config()
 //set port local
 const port = process.env.PORT || 3001;
@@ -17,6 +17,7 @@ const port = process.env.PORT || 3001;
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
+app.use(cors("*"));
 
 //
 

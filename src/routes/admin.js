@@ -28,5 +28,9 @@ router.get('/accounts', authController.getAllAccounts);
 
 router.get('/getDetailAccount', authController.getDetailAccount)
 
+router.get('/setting', authController.getSetting);
+
+router.post('/setting', authController.updateSetting);
+
 
 module.exports = router;
