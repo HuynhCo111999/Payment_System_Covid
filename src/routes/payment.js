@@ -3,7 +3,13 @@ const router = express.Router();
 const controller = require("../controllers/payment.controller");
 
 
-router.post("/getCredit", controller.recharge);
+router.post("/recharge", controller.rechargeAndDebit);
+
+router.post("/identify", controller.identify);
+
+router.post("/payment", controller.payment);
+
+module.exports = router;
 
 
 

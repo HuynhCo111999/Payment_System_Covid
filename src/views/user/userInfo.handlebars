@@ -1,3 +1,82 @@
+
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn bg-gradient-primary btn-block" data-bs-toggle="modal"
+        data-bs-target="#exampleModalSignUp">
+        <i class="material-icons opacity-10">add_card</i>
+    </button>
+</div>
+
+<div class="modal fade" id="exampleModalSignUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align:center" class="modal-title font-weight-normal" id="exampleModalLabel">
+                    NHẬP SỐ TIỀN CẦN NỘP
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <form role="form text-left" id="add-location-form" >
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Số tiền</label>
+                            <input type="number" class="form-control" name="money" id="money">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="errmsg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="handleClick({{userInfo.userId}})" class="btn bg-gradient-primary">Nộp</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align:center" class="modal-title font-weight-normal" id="exampleModalLabel">
+                    XÁC NHẬN NỘP TIỀN
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card-body pb-3">
+                    <div class="col-12">
+                        <p>Sao chép token và xác nhận</p>
+                    </div>
+                    <div class="col-12">
+                        <span id="token"></span>
+                    </div>
+                    <form role="form text-left" id="add-location-form" >
+                        <div class="input-group input-group-outline my-3">
+                            <label class="form-label">Token Recharge</label>
+                            <input type="text" class="form-control" name="token-recharge" id="token-recharge">
+                        </div>
+                    </form>
+                    <p class="text-danger" id="msg"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="handleIdentify({{userInfo.userId}})" class="btn bg-gradient-primary">Xác nhận</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="card z-index-0 fadeIn3 fadeInBottom py-5">
     <h3 class='text-center my-3'>THÔNG TIN TÀI KHOẢN</h3>
     <div class="container-fluid w-75 py-3">
@@ -35,3 +114,100 @@
         </div>
     </div>
 </div>
+
+
+<script src="/js/core/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    let dataMain = null;
+    const handleClick = (id) => {
+        console.log("userId: ", id)
+        const temp = $("#money").val();
+        if(!temp) {
+            $("#errmsg").text("Vui lòng nhập số tiền.")
+            return;
+        }
+        const money = Number(temp);
+        if(money <= 0) {
+            $("#errmsg").text("Số tiền phải lớn hơn 0.")
+            return;
+        }
+        const data = {
+            money: money,
+            position: 'RECHARGE',
+            status: 'START',
+            userId: id
+        }
+        fetch(`https://localhost:3001/credit/recharge`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => 
+            response.json())
+          .then(data => {
+            if(data.success) {
+                $('#exampleModalSignUp').modal('hide');
+                $('#ConfirmModal').modal('show');
+                $("#token").text(data.data.tokenpayment);
+                dataMain = data.data;
+                console.log("data: ", data);
+            } else {
+                $('#exampleModalSignUp').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Update error',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+          });
+    }
+    const handleIdentify = (id) => {
+        const temp = $("#token-recharge").val();
+        if(!temp) {
+            $("#msg").text("Vui lòng nhập số tiền.")
+            return;
+        }
+        const data = {
+            token: temp,
+            userId: id,
+            postion: 'RECHARGE',
+            money: dataMain.money
+        }
+
+        fetch(`https://localhost:3001/credit/identify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then(response => 
+            response.json())
+          .then(data => {
+            if(data.success) {
+                $('#ConfirmModal').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Update sucesss',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+                console.log("data: ", data);
+            } else {
+                $('#exampleModalSignUp').modal('hide');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Update error',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+          });
+    }
+</script>
