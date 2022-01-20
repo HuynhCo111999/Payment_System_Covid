@@ -266,4 +266,46 @@ exports.getDetailAccount = async(req, res) => {
   })
 }
 
+exports.getConnectSystem = async(req, res) => {
+  const token = req.query.token;
+  return res.render('admin/connectSystem', {
+    token: token
+  })
+}
+
+exports.connectPayment = async(req, res) => {
+  const token = req.query.token;
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({
+        message: "Unauthorized!"
+      });
+    }
+    console.log("decoded: ", decoded)
+    User.findOne({
+      raw: true,
+      include: [
+        {
+          model: Role
+        }
+      ],
+      where: {
+        id: decoded.id
+      }
+    }).then((user) => {
+      console.log(user)
+      if(user["roles.name"] === "user") {
+        res.cookie("access_token", token);
+        res.cookie("userId", user.id);
+        res.cookie("userType", 'user');
+        return res.redirect('/user/infoAccount');
+      } else {
+        res.cookie("access_token", token);
+        res.cookie("userId", user.id);
+        res.cookie("userType", 'admin');
+        return res.redirect('/admin/accounts');
+      }
+    })
+  });
+}
 

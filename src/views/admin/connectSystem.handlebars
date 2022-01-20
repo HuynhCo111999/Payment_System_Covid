@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="main">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-12">
+                <div class="card">
+                    <div class="content-card">
+                        <form role="form text-left" id="connect-form" action="/connectTwoSystem?token={{token}}" method="post" >
+                            <p>
+                                Token: {{token}}
+                            </p>
+                            <div>Click to connect with payment system.</div>
+                        </form>
+                        <button type="submit" class="btn bg-gradient-primary" form="connect-form">Click</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+.container {
+    height: 100vh;
+    width: 100vw;
+}
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+.card {
+    height: 300px;
+    width: 500px;
+    background-image: url('../../public/coin.jpeg');
+}
+.content-card {
+    margin: auto; 
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+}
+button {
+    margin-top: 10px;
+}
+</style>

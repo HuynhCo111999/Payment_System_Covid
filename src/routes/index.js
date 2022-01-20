@@ -45,5 +45,8 @@ router.get('/logout', async(req, res) => {
     return res.redirect('/');
 })
 
+router.get('/connectsystem', controller.getConnectSystem);
+
+router.post('/connectTwoSystem', controller.connectPayment);
 
 module.exports = router;
