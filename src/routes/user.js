@@ -9,4 +9,6 @@ router.post('/resetPassword', userControlller.resetPassword);
 
 router.get('/getRessetPassword', userControlller.getChangePassword);
 
+router.get('/getInfoAccount', userControlller.getInfoAccount);
+
 module.exports = router;

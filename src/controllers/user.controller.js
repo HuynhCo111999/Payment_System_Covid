@@ -1,7 +1,9 @@
 
 const db = require('../models');
 const User = db.user;
+const Wallet = db.wallet;
 var bcrypt = require("bcryptjs");
+const { use } = require('passport');
 
 exports.getAllUsers = async (req, res) => {
   const listUsers = await User.findAll({ raw: true });
@@ -20,11 +22,49 @@ exports.getUserInfo = async (req, res) => {
       id: userId
     }
   })
-  console.log("User Info: ", userInfo);
+  const wallet = await Wallet.findOne({
+    raw: true,
+    where: {
+      id: userId
+    }
+  })
+  const data = {...userInfo,...wallet};
+  console.log("User Info: ", data);
   res.render('user/userInfo', {
     layout: 'user/main',
-    userInfo: userInfo,
+    userInfo: data,
   });
+}
+
+exports.getInfoAccount = async (req, res) => {
+  const userId = req.body.userId;
+  const userInfo = await User.findOne({
+    raw: true,
+    where: {
+      id: userId
+    }
+  })
+  const wallet = await Wallet.findOne({
+    raw: true,
+    where: {
+      id: userId
+    }
+  })
+  const data = {...userInfo,...wallet};
+  console.log("User Info: ", data);
+  if(userInfo && wallet) {
+    return res.json({
+      success: true,
+      data: data
+    })
+  }
+  else {
+    return res.json({
+      success: false,
+      error: "error."
+    })
+  }
+  
 }
 
 exports.resetPassword = async(req, res) => {
