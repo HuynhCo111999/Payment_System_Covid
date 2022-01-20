@@ -32,5 +32,7 @@ router.get('/setting', authController.getSetting);
 
 router.post('/setting', authController.updateSetting);
 
+router.get('/histories', authController.getHistories)
+
 
 module.exports = router;

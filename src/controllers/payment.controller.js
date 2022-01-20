@@ -40,7 +40,7 @@ exports.payment = async(req, res) => {
         userId: body.userId
     })
     if(dataWallet) {
-        if(limitcredit > body.money) {
+        if(setting.limitcredit > body.money) {
             return res.json({
                 success: false,
                 error: "Không đủ hạn mức thanh toán."
@@ -72,7 +72,7 @@ exports.payment = async(req, res) => {
     }
     return res.json({
         success: false,
-        erorr: "error"
+        error: "error"
     })
 }
 

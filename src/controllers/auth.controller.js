@@ -4,6 +4,8 @@ const User = db.user;
 const Role = db.role;
 const Wallet = db.wallet;
 const Setting = db.setting;
+const Payment = db.payment;
+
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
@@ -365,5 +367,14 @@ exports.updateSetting = async(req, res) => {
   return res.json({
     success: false,
     error: "erorr"
+  })
+}
+
+exports.getHistories = async(req, res) => {
+  const histories = await Payment.findAll({raw: true});
+  console.log("histories: ", histories)
+  return res.render('admin/histories' , {
+    layout: 'admin/main',
+    histories: histories
   })
 }
