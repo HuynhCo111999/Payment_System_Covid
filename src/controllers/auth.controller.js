@@ -101,7 +101,7 @@ exports.signin = (req, res) => {
         })
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      var token = jwt.sign({ id: user.id, username: user.username }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
       
@@ -290,7 +290,7 @@ exports.connectPayment = async(req, res) => {
         }
       ],
       where: {
-        id: decoded.id
+        username: decoded.username
       }
     }).then((user) => {
       console.log(user)
@@ -305,6 +305,8 @@ exports.connectPayment = async(req, res) => {
         res.cookie("userType", 'admin');
         return res.redirect('/admin/accounts');
       }
+    }).catch((error) => {
+      return res.json({error})
     })
   });
 }
