@@ -151,10 +151,11 @@ exports.getChangePassword = async (req, res) => {
 }
 
 exports.getUserByUserName = async (req, res) => {
+  console.log("req: ", req.body);
   const user = await User.findOne({
     raw: true,
     where: {
-      username: req.body.username
+      username: req.body.username.toString()
     }
   })
   if(user) {
